@@ -1,0 +1,962 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--nv:#0f2547;--nv2:#1a3560;--ac:#1D9E75;--ac2:#0F6E56;--acl:#E1F5EE;
+--bl:#185FA5;--bll:#E6F1FB;--bl2:#0C447C;
+--am:#854F0B;--aml:#FAEEDA;--am2:#633806;
+--rd:#A32D2D;--rdl:#FCEBEB;--rd2:#791F1F;
+--tp:var(--color-text-primary);--ts:var(--color-text-secondary);
+--bd:var(--color-border-tertiary);--bd2:var(--color-border-secondary);
+--bg:var(--color-background-primary);--bg2:var(--color-background-secondary);
+--rmd:var(--border-radius-md);--rlg:var(--border-radius-lg)
+}
+.w{font-family:var(--font-sans)}
+.hdr{background:var(--nv);border-radius:var(--rlg) var(--rlg) 0 0;padding:12px 18px;display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--ac)}
+.hlogo{width:32px;height:32px;background:var(--ac);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hlogo svg{width:17px;height:17px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.htitle{font-size:13px;font-weight:500;color:#fff;flex:1}
+.hsub{font-size:9px;color:#9FE1CB;letter-spacing:.07em;margin-top:1px}
+.hpulse{width:6px;height:6px;border-radius:50%;background:var(--ac);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* TOP TABS */
+.top-tabs{display:flex;background:var(--nv);border-bottom:none;gap:0}
+.top-tab{flex:1;padding:9px 8px;text-align:center;cursor:pointer;font-size:11px;font-weight:500;color:rgba(255,255,255,.5);border-bottom:2px solid transparent;transition:all .15s}
+.top-tab.on{color:#fff;border-bottom-color:var(--ac)}
+.top-tab:hover{color:rgba(255,255,255,.8)}
+
+/* STEP NAV */
+.steps{display:flex;background:var(--bg2);border-bottom:.5px solid var(--bd);overflow-x:auto}
+.step{flex:1;min-width:0;padding:8px 4px;text-align:center;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.step .sn{font-size:9px;color:var(--ts);letter-spacing:.05em;display:block}
+.step .sl{font-size:10px;font-weight:500;color:var(--ts);display:block;margin-top:1px}
+.step.on .sn,.step.on .sl{color:var(--ac2)}
+.step.on{border-bottom-color:var(--ac)}
+.step.done .sl,.step.done .sn{color:var(--ac)}
+
+.body{padding:14px 18px;background:var(--bg)}
+.lbl{font-size:10px;color:var(--ts);letter-spacing:.07em;margin-bottom:5px}
+
+textarea{width:100%;border:.5px solid var(--bd);border-radius:var(--rmd);padding:8px 10px;font-size:12px;line-height:1.65;color:var(--tp);background:var(--bg2);resize:vertical;font-family:var(--font-sans);transition:border-color .15s}
+textarea:focus{outline:none;border-color:var(--ac)}
+textarea::placeholder{color:var(--ts);font-size:11px}
+select,input[type=text]{width:100%;border:.5px solid var(--bd);border-radius:var(--rmd);padding:0 10px;font-size:12px;color:var(--tp);background:var(--bg2);height:34px;font-family:var(--font-sans)}
+select:focus,input[type=text]:focus{outline:none;border-color:var(--ac)}
+input[type=text]::placeholder{color:var(--ts);font-size:11px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:11px;padding:3px 9px;border-radius:20px;border:.5px solid var(--bd);color:var(--ts);background:var(--bg2);cursor:pointer;transition:all .15s;user-select:none;line-height:1.6}
+.chip.on{background:var(--acl);border-color:var(--ac);color:var(--ac2);font-weight:500}
+
+.btn-nv{padding:9px 18px;background:var(--nv);color:#fff;border:none;border-radius:var(--rmd);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font-sans);transition:background .15s,transform .1s}
+.btn-nv:hover{background:var(--nv2)}
+.btn-nv:active{transform:scale(.98)}
+.btn-nv:disabled{opacity:.45;cursor:not-allowed}
+.btn-ac{padding:9px 18px;background:var(--ac);color:#fff;border:none;border-radius:var(--rmd);font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font-sans);transition:background .15s}
+.btn-ac:hover{background:var(--ac2)}
+.btn-ghost{padding:8px 13px;background:transparent;color:var(--ts);border:.5px solid var(--bd);border-radius:var(--rmd);font-size:11px;cursor:pointer;font-family:var(--font-sans);transition:background .15s}
+.btn-ghost:hover{background:var(--bg2)}
+.btn-sm{padding:5px 10px;background:transparent;border:.5px solid var(--bd);border-radius:var(--rmd);font-size:11px;color:var(--ts);cursor:pointer;font-family:var(--font-sans);transition:all .15s}
+.btn-sm:hover{border-color:var(--ac);color:var(--ac2);background:var(--acl)}
+.btn-danger{padding:5px 10px;background:transparent;border:.5px solid var(--bd);border-radius:var(--rmd);font-size:11px;color:var(--ts);cursor:pointer;font-family:var(--font-sans);transition:all .15s}
+.btn-danger:hover{border-color:#E24B4A;color:var(--rd);background:var(--rdl)}
+
+.loader{display:none;height:2px;background:var(--bg2);border-radius:1px;overflow:hidden;margin-top:8px}
+.loader.on{display:block}
+.loader-bar{height:100%;background:var(--ac);animation:ld 1.3s ease-in-out infinite;width:30%}
+@keyframes ld{0%{transform:translateX(-180%)}100%{transform:translateX(500%)}}
+
+.alert{border-radius:var(--rmd);padding:8px 11px;font-size:12px;line-height:1.65;margin-bottom:9px}
+.alert-warn{background:var(--aml);border:.5px solid #EF9F27;color:var(--am2)}
+.alert-warn .al{font-size:9px;font-weight:500;color:var(--am);letter-spacing:.07em;margin-bottom:2px}
+.alert-ok{background:var(--acl);border:.5px solid var(--ac);color:#085041}
+.alert-ok .al{font-size:9px;font-weight:500;color:var(--ac2);letter-spacing:.07em;margin-bottom:2px}
+.alert-info{background:var(--bll);border:.5px solid #85B7EB;color:var(--bl2)}
+.alert-info .al{font-size:9px;font-weight:500;color:var(--bl);letter-spacing:.07em;margin-bottom:2px}
+.alert-ng{background:var(--rdl);border:.5px solid #E24B4A;color:var(--rd2)}
+.alert-ng .al{font-size:9px;font-weight:500;color:var(--rd);letter-spacing:.07em;margin-bottom:2px}
+
+.rcard{border:.5px solid var(--bd);border-radius:var(--rlg);background:var(--bg);margin-bottom:8px;overflow:hidden}
+.rcard.r1{border-color:var(--ac)}
+.rcard.r2{border-color:#378ADD}
+.rcard.r3{border-color:#EF9F27}
+.rcard-hdr{display:flex;align-items:center;gap:8px;padding:10px 13px;cursor:pointer}
+.rbadge{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;flex-shrink:0}
+.r1 .rbadge{background:#E1F5EE;color:#0F6E56}
+.r2 .rbadge{background:#E6F1FB;color:#185FA5}
+.r3 .rbadge{background:#FAEEDA;color:#854F0B}
+.rlow .rbadge{background:var(--bg2);color:var(--ts)}
+.rcname{font-size:12px;font-weight:500;color:var(--tp);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rcpct{font-size:11px;font-weight:500;flex-shrink:0}
+.r1 .rcpct{color:var(--ac2)}
+.r2 .rcpct{color:var(--bl)}
+.r3 .rcpct{color:var(--am)}
+.rlow .rcpct{color:var(--ts)}
+.rchev{font-size:10px;color:var(--ts);transition:transform .2s;margin-left:2px}
+.rcard.open .rchev{transform:rotate(180deg)}
+.rbar-bg{height:3px;background:var(--bg2);margin:0 13px 8px}
+.rbar-f{height:100%;transition:width .65s cubic-bezier(.4,0,.2,1)}
+.r1 .rbar-f{background:var(--ac)}
+.r2 .rbar-f{background:#378ADD}
+.r3 .rbar-f{background:#EF9F27}
+.rlow .rbar-f{background:#888780}
+.rbody{display:none;border-top:.5px solid var(--bd);padding:11px 13px}
+.rcard.open .rbody{display:block}
+.tabs{display:flex;border-bottom:.5px solid var(--bd);margin-bottom:9px;overflow-x:auto}
+.tab{font-size:10px;color:var(--ts);padding:5px 8px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-.5px;white-space:nowrap;transition:all .12s}
+.tab.on{color:var(--ac2);border-color:var(--ac);font-weight:500}
+.tab-pane{display:none}
+.tab-pane.on{display:block}
+.check-list,.x-list{list-style:none;padding:0}
+.check-list li,.x-list li{font-size:12px;color:var(--tp);line-height:1.6;padding:2px 0 2px 14px;position:relative}
+.check-list li::before{content:'✓';position:absolute;left:0;top:2px;font-size:10px;color:var(--ac)}
+.x-list li::before{content:'✕';position:absolute;left:0;top:2px;font-size:10px;color:var(--rd)}
+.prop-box{background:var(--bg2);border-left:2px solid var(--ac);border-radius:0 var(--rmd) var(--rmd) 0;padding:8px 10px;font-size:12px;color:var(--tp);line-height:1.7;margin:5px 0}
+.talk-box{background:var(--bll);border-radius:var(--rmd);padding:9px 11px}
+.talk-lbl{font-size:9px;font-weight:500;color:var(--bl);letter-spacing:.07em;margin-bottom:3px}
+.talk-txt{font-size:12px;color:var(--bl2);line-height:1.75;font-style:italic}
+.mlbl{font-size:10px;color:var(--ts);letter-spacing:.05em;margin:9px 0 4px;font-weight:500}
+.q-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:4px}
+.q-item{background:var(--bg2);border-radius:var(--rmd);padding:7px 9px;border:.5px solid var(--bd)}
+.q-item p{font-size:10px;color:var(--ts);margin-bottom:2px}
+.q-item b{font-size:11px;color:var(--tp);font-weight:500;display:block;line-height:1.5}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
+.tag{font-size:10px;padding:2px 7px;border-radius:20px;border:.5px solid var(--bd);color:var(--ts);background:var(--bg2)}
+.stat-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:11px}
+.stat{background:var(--bg2);border-radius:var(--rmd);padding:9px 10px;text-align:center}
+.stat-n{font-size:18px;font-weight:500;color:var(--tp)}
+.stat-l{font-size:10px;color:var(--ts);margin-top:1px}
+.div{height:.5px;background:var(--bd);margin:11px 0}
+.row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.sp{margin-top:8px}
+.cbadge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;background:var(--acl);color:var(--ac2);border:.5px solid var(--ac);margin-bottom:7px;font-weight:500}
+.live-note{font-size:11px;color:var(--ts);font-style:italic;margin-top:4px;min-height:16px}
+.hw{background:var(--acl);color:var(--ac2);padding:0 3px;border-radius:3px;font-weight:500}
+
+/* ====== HISTORY STYLES ====== */
+.hist-toolbar{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.hist-search{flex:1;min-width:120px;border:.5px solid var(--bd);border-radius:var(--rmd);padding:0 10px;font-size:12px;color:var(--tp);background:var(--bg2);height:32px;font-family:var(--font-sans)}
+.hist-search:focus{outline:none;border-color:var(--ac)}
+.hist-filter{border:.5px solid var(--bd);border-radius:var(--rmd);padding:0 8px;font-size:11px;color:var(--tp);background:var(--bg2);height:32px;font-family:var(--font-sans);cursor:pointer}
+.hist-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-bottom:12px}
+.hist-stat{background:var(--bg2);border-radius:var(--rmd);padding:8px 10px;text-align:center}
+.hist-stat-n{font-size:16px;font-weight:500;color:var(--tp)}
+.hist-stat-l{font-size:10px;color:var(--ts);margin-top:1px}
+.deal-row{border:.5px solid var(--bd);border-radius:var(--rlg);background:var(--bg);margin-bottom:7px;overflow:hidden;transition:border-color .15s}
+.deal-row:hover{border-color:var(--bd2)}
+.deal-row.status-hot{border-left:3px solid var(--ac)}
+.deal-row.status-followup{border-left:3px solid #378ADD}
+.deal-row.status-pending{border-left:3px solid #EF9F27}
+.deal-row.status-ng{border-left:3px solid #E24B4A}
+.deal-row.status-done{border-left:3px solid #888780}
+.deal-hdr{display:flex;align-items:center;gap:8px;padding:10px 13px;cursor:pointer}
+.deal-avatar{width:32px;height:32px;border-radius:50%;background:var(--acl);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--ac2);flex-shrink:0}
+.deal-main{flex:1;min-width:0}
+.deal-name{font-size:13px;font-weight:500;color:var(--tp);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.deal-sub{font-size:11px;color:var(--ts);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.deal-meta{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
+.deal-date{font-size:10px;color:var(--ts)}
+.deal-score{font-size:11px;font-weight:500;color:var(--ac2)}
+.status-pill{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;white-space:nowrap}
+.sp-hot{background:var(--acl);color:var(--ac2)}
+.sp-followup{background:var(--bll);color:var(--bl2)}
+.sp-pending{background:var(--aml);color:var(--am2)}
+.sp-ng{background:var(--rdl);color:var(--rd2)}
+.sp-done{background:var(--bg2);color:var(--ts)}
+.deal-body{display:none;border-top:.5px solid var(--bd);padding:11px 13px}
+.deal-row.open .deal-body{display:block}
+.deal-chevron{font-size:10px;color:var(--ts);transition:transform .2s;margin-left:4px}
+.deal-row.open .deal-chevron{transform:rotate(180deg)}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:10px}
+.info-cell{background:var(--bg2);border-radius:var(--rmd);padding:7px 9px}
+.info-cell p{font-size:10px;color:var(--ts);margin-bottom:2px}
+.info-cell b{font-size:12px;color:var(--tp);font-weight:500;display:block;line-height:1.4}
+.rec-chips{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}
+.rec-chip{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500}
+.rc1{background:var(--acl);color:var(--ac2)}
+.rc2{background:var(--bll);color:var(--bl2)}
+.rc3{background:var(--aml);color:var(--am2)}
+.rcn{background:var(--bg2);color:var(--ts);border:.5px solid var(--bd)}
+.note-area{width:100%;border:.5px solid var(--bd);border-radius:var(--rmd);padding:7px 10px;font-size:12px;line-height:1.6;color:var(--tp);background:var(--bg2);resize:vertical;font-family:var(--font-sans);min-height:60px}
+.note-area:focus{outline:none;border-color:var(--ac)}
+.status-select{border:.5px solid var(--bd);border-radius:var(--rmd);padding:0 8px;font-size:11px;color:var(--tp);background:var(--bg2);height:28px;font-family:var(--font-sans);cursor:pointer}
+.empty-state{text-align:center;padding:40px 20px;color:var(--ts)}
+.empty-icon{width:40px;height:40px;margin:0 auto 10px;opacity:.3}
+.empty-icon svg{width:40px;height:40px;fill:none;stroke:var(--ts);stroke-width:1.5}
+.loading-hist{text-align:center;padding:20px;color:var(--ts);font-size:12px}
+</style>
+
+<div class="w">
+<div class="hdr">
+  <div class="hlogo">
+    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  </div>
+  <div style="flex:1">
+    <div class="htitle">キャリアコネクト FS サポート</div>
+    <div class="hsub">REAL-TIME MTG SUPPORT + DEAL HISTORY — v4</div>
+  </div>
+  <div class="hpulse"></div>
+</div>
+
+<div class="top-tabs">
+  <div class="top-tab on" onclick="switchMain('mtg')">商談サポート</div>
+  <div class="top-tab" onclick="switchMain('history')">商談履歴一覧</div>
+</div>
+
+<!-- ===== MTG PANEL ===== -->
+<div id="mainMtg">
+<div class="steps" id="stepNav">
+  <div class="step on" onclick="gotoStep(0)" id="st0"><span class="sn">STEP 1</span><span class="sl">企業情報</span></div>
+  <div class="step" onclick="gotoStep(1)" id="st1"><span class="sn">STEP 2</span><span class="sl">課題ヒアリング</span></div>
+  <div class="step" onclick="gotoStep(2)" id="st2"><span class="sn">STEP 3</span><span class="sl">詳細確認</span></div>
+  <div class="step" onclick="gotoStep(3)" id="st3"><span class="sn">STEP 4</span><span class="sl">マッチング</span></div>
+  <div class="step" onclick="gotoStep(4)" id="st4"><span class="sn">STEP 5</span><span class="sl">提案・保存</span></div>
+</div>
+
+<div class="body">
+
+<!-- S0 -->
+<div id="pane0">
+  <div class="lbl">商談先の基本情報</div>
+  <div class="g2" style="margin-bottom:9px">
+    <div><div class="lbl">会社名</div><input type="text" id="cName" placeholder="株式会社〇〇"></div>
+    <div><div class="lbl">担当者名・役職</div><input type="text" id="pName" placeholder="山田 太郎 / 代表取締役"></div>
+  </div>
+  <div class="g2" style="margin-bottom:9px">
+    <div>
+      <div class="lbl">業種</div>
+      <select id="ind">
+        <option value="">-- 選択 --</option>
+        <option value="sales_agency">営業・販売・代理店</option>
+        <option value="consulting">コンサルティング・経営支援</option>
+        <option value="it_saas">IT・SaaS・テック（自社プロダクト）</option>
+        <option value="it_ses">IT・SES・客先常駐</option>
+        <option value="web_creative">Web制作・クリエイティブ</option>
+        <option value="manufacturing">製造・メーカー</option>
+        <option value="real_estate">不動産・建設</option>
+        <option value="hr_recruit">人材・採用</option>
+        <option value="retail_ec">小売・EC・消費財</option>
+        <option value="childcare_edu">子育て・教育・福祉</option>
+        <option value="finance">金融・保険</option>
+        <option value="medical">医療・介護・士業</option>
+        <option value="food_hospitality">飲食・ホテル・接客</option>
+        <option value="public">官公庁・自治体・NPO・学校法人</option>
+        <option value="other">その他</option>
+      </select>
+    </div>
+    <div>
+      <div class="lbl">従業員規模</div>
+      <select id="emp">
+        <option value="">-- 選択 --</option>
+        <option value="solo">個人事業主・フリーランス</option>
+        <option value="micro">〜10名</option>
+        <option value="small">11〜50名</option>
+        <option value="mid_small">51〜300名</option>
+        <option value="mid">301〜1000名</option>
+        <option value="large">1001名以上</option>
+      </select>
+    </div>
+  </div>
+  <div class="g2" style="margin-bottom:9px">
+    <div>
+      <div class="lbl">商材タイプ</div>
+      <select id="biz">
+        <option value="">-- 選択 --</option>
+        <option value="saas_tool">SaaS・ツール（無形）</option>
+        <option value="consulting_svc">コンサル・支援サービス（無形）</option>
+        <option value="tangible">物販・製品（有形）</option>
+        <option value="hybrid">有形＋無形ミックス</option>
+        <option value="unknown">不明</option>
+      </select>
+    </div>
+    <div>
+      <div class="lbl">粗利率（概算）</div>
+      <select id="mar">
+        <option value="">-- 選択 --</option>
+        <option value="high">60%以上（無形・SaaS等）</option>
+        <option value="mid">30〜60%</option>
+        <option value="low">30%未満（物販・薄利）</option>
+        <option value="unknown">不明</option>
+      </select>
+    </div>
+  </div>
+  <div class="lbl" style="margin-top:4px">MTGメモ（随時更新OK）</div>
+  <textarea id="m0" rows="3" placeholder="会社の概要・事業内容・背景などをヒアリングしながら記入"></textarea>
+  <div id="kw0" class="live-note"></div>
+  <div class="row" style="margin-top:10px">
+    <button class="btn-nv" onclick="gotoStep(1)">次へ: 課題ヒアリング</button>
+  </div>
+</div>
+
+<!-- S1 -->
+<div id="pane1" style="display:none">
+  <div id="nga1"></div>
+  <div class="lbl">課題・困りごと（MTG中リアルタイム記入）</div>
+  <textarea id="m1" rows="5" placeholder="例：テレアポが繋がらない / 新規アポが月5件以下 / 営業リソース不足 / 固定費リスクが怖い / 過去の営業代行で失敗した / 名刺が山積みで管理できない / 契約書チェックに毎回弁護士が必要 / 業務委託で専門人材を使いたい..."></textarea>
+  <div id="kw1" class="live-note" style="margin-top:4px"></div>
+  <div class="sp"></div>
+  <div class="lbl">課題キーワード（出てきたらタップ）</div>
+  <div class="chips" id="chips1">
+    <div class="chip" data-k="new_client">新規顧客獲得</div>
+    <div class="chip" data-k="appo_lack">アポが少ない</div>
+    <div class="chip" data-k="telework_fail">テレアポが繋がらない</div>
+    <div class="chip" data-k="sales_outsource">営業を外注したい</div>
+    <div class="chip" data-k="past_fail">営業代行で失敗</div>
+    <div class="chip" data-k="cost_fear">固定費リスクが怖い</div>
+    <div class="chip" data-k="cash_flow">CF不安</div>
+    <div class="chip" data-k="sales_resource">営業リソース不足</div>
+    <div class="chip" data-k="meishi_mgmt">名刺管理が大変</div>
+    <div class="chip" data-k="network_use">人脈を活かしたい</div>
+    <div class="chip" data-k="referral">リファラル強化</div>
+    <div class="chip" data-k="legal_cost">法務コストが高い</div>
+    <div class="chip" data-k="no_legal">法務担当なし</div>
+    <div class="chip" data-k="contract_slow">契約締結が遅い</div>
+    <div class="chip" data-k="hr_flexible">柔軟な採用</div>
+    <div class="chip" data-k="hire_cost">採用コスト削減</div>
+    <div class="chip" data-k="specialist">専門人材がすぐ欲しい</div>
+    <div class="chip" data-k="remote_ok">リモート対応可</div>
+    <div class="chip" data-k="vendor_distrust">外注先を信頼できない</div>
+    <div class="chip" data-k="vendor_fail">外注で失敗した</div>
+    <div class="chip" data-k="dx_push">DX・デジタル化推進</div>
+    <div class="chip" data-k="newbiz">新規事業立ち上げ</div>
+    <div class="chip" data-k="childcare_mkt">子育て世帯へアプローチ</div>
+    <div class="chip" data-k="btoc_lead">BtoCリード獲得に困っている</div>
+  </div>
+  <div class="row" style="margin-top:11px">
+    <button class="btn-ghost" onclick="gotoStep(0)">戻る</button>
+    <button class="btn-nv" onclick="gotoStep(2)">次へ: 詳細確認</button>
+  </div>
+</div>
+
+<!-- S2 -->
+<div id="pane2" style="display:none">
+  <div id="nga2"></div>
+  <div class="lbl">追加ヒアリング</div>
+  <div class="g2" style="margin-bottom:9px">
+    <div><div class="lbl">月間目標アポ数</div>
+      <select id="tappo"><option value="">--</option><option value="1to5">1〜5件</option><option value="6to15">6〜15件</option><option value="16to30">16〜30件</option><option value="over30">30件以上</option><option value="none">アポ獲得が目標ではない</option></select>
+    </div>
+    <div><div class="lbl">営業担当人数</div>
+      <select id="snum"><option value="">--</option><option value="0">0名</option><option value="1to3">1〜3名</option><option value="4to10">4〜10名</option><option value="over10">10名以上</option></select>
+    </div>
+  </div>
+  <div class="g2" style="margin-bottom:9px">
+    <div><div class="lbl">月間予算感</div>
+      <select id="bgt"><option value="">--</option><option value="under30">〜30万円</option><option value="30to100">30〜100万円</option><option value="over100">100万円以上</option><option value="perf_only">成果報酬のみ</option><option value="unclear">未定</option></select>
+    </div>
+    <div><div class="lbl">検討の緊急度</div>
+      <select id="urg"><option value="">--</option><option value="now">今すぐ動きたい</option><option value="1month">1ヶ月以内</option><option value="3month">3ヶ月以内</option><option value="consider">情報収集中</option></select>
+    </div>
+  </div>
+  <div class="lbl">補足メモ</div>
+  <textarea id="m2" rows="3" placeholder="例：以前〇〇社に月50万払ったが成果ゼロだった / 名刺が年500枚以上 / 弁護士費用が月5万かかっている / 子育て世代の女性向け商品を扱っている..."></textarea>
+  <div id="kw2" class="live-note" style="margin-top:4px"></div>
+  <div class="row" style="margin-top:11px">
+    <button class="btn-ghost" onclick="gotoStep(1)">戻る</button>
+    <button class="btn-ac" id="analyzeBtn" onclick="runAnalysis()">AI マッチング分析を実行</button>
+  </div>
+  <div class="loader" id="loader"><div class="loader-bar"></div></div>
+</div>
+
+<!-- S3 -->
+<div id="pane3" style="display:none">
+  <div id="mAlert"></div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-n" id="sTop">--</div><div class="stat-l">最高適合度</div></div>
+    <div class="stat"><div class="stat-n" id="sCnt">--</div><div class="stat-l">推奨候補社数</div></div>
+    <div class="stat"><div class="stat-n" id="sNeed">--</div><div class="stat-l">主要ニーズ</div></div>
+  </div>
+  <div style="background:var(--bg2);border-radius:var(--rmd);padding:9px 11px;margin-bottom:11px;border:.5px solid var(--bd)">
+    <div class="lbl" style="margin-bottom:3px">AI 分析サマリー</div>
+    <div style="font-size:12px;color:var(--tp);line-height:1.7" id="aiSum">--</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+    <div class="lbl" style="margin-bottom:0">マッチング結果</div>
+    <div style="font-size:10px;color:var(--ts)">タップで詳細</div>
+  </div>
+  <div id="cardList"></div>
+  <div class="row" style="margin-top:10px">
+    <button class="btn-ghost" onclick="gotoStep(2)">条件を修正</button>
+    <button class="btn-nv" onclick="gotoStep(4)">提案・保存へ</button>
+  </div>
+</div>
+
+<!-- S4 -->
+<div id="pane4" style="display:none">
+  <div style="background:var(--bg2);border-radius:var(--rmd);padding:10px 12px;margin-bottom:11px;border:.5px solid var(--bd)">
+    <div class="lbl" style="margin-bottom:5px">商談サマリー</div>
+    <div style="font-size:12px;color:var(--tp);line-height:1.7;white-space:pre-line" id="dealSum"></div>
+  </div>
+  <div class="lbl">最優先推奨企業</div>
+  <div id="topProp"></div>
+  <div class="div"></div>
+  <div class="lbl">今後のアクション・メモ</div>
+  <textarea id="actionNote" rows="3" placeholder="次回アポ日・提案内容・懸念点・フォロー事項など"></textarea>
+  <div class="lbl" style="margin-top:9px">ステータス</div>
+  <div class="row" style="margin-bottom:11px">
+    <select id="dealStatus" style="width:auto;flex:1;border:.5px solid var(--bd);border-radius:var(--rmd);padding:0 10px;font-size:12px;color:var(--tp);background:var(--bg2);height:34px;font-family:var(--font-sans)">
+      <option value="hot">トスアップ予定・即対応</option>
+      <option value="followup">フォロー中</option>
+      <option value="pending">検討中・保留</option>
+      <option value="ng">NG・不適合</option>
+      <option value="done">完了・クローズ</option>
+    </select>
+  </div>
+  <div class="row">
+    <button class="btn-ghost" onclick="gotoStep(3)">マッチングに戻る</button>
+    <button class="btn-ac" onclick="saveDeal()">この商談を履歴に保存</button>
+    <button class="btn-ghost" onclick="resetAll()">新しい商談</button>
+  </div>
+  <div id="saveMsg" style="font-size:12px;color:var(--ac2);margin-top:8px;display:none">保存しました。「商談履歴一覧」から確認できます。</div>
+</div>
+
+</div>
+</div>
+
+<!-- ===== HISTORY PANEL ===== -->
+<div id="mainHistory" style="display:none">
+<div class="body">
+  <div id="histLoading" class="loading-hist">読み込み中...</div>
+  <div id="histContent" style="display:none">
+    <div class="hist-stats" id="histStats"></div>
+    <div class="hist-toolbar">
+      <input class="hist-search" type="text" id="histSearch" placeholder="会社名・担当者名・キーワードで検索..." oninput="renderHistory()">
+      <select class="hist-filter" id="histStatusFilter" onchange="renderHistory()">
+        <option value="">全ステータス</option>
+        <option value="hot">トスアップ予定</option>
+        <option value="followup">フォロー中</option>
+        <option value="pending">検討中・保留</option>
+        <option value="ng">NG</option>
+        <option value="done">完了</option>
+      </select>
+      <select class="hist-filter" id="histSortFilter" onchange="renderHistory()">
+        <option value="date_desc">新しい順</option>
+        <option value="date_asc">古い順</option>
+        <option value="score_desc">適合度高い順</option>
+      </select>
+    </div>
+    <div id="histList"></div>
+  </div>
+</div>
+</div>
+
+</div>
+
+<script>
+const DB={
+  aimsales:{name:'Aimsales',full:'株式会社 Aimsales',tagline:'AIが1社ずつカスタマイズ営業文を自動送付・月10社アポ獲得',
+  about:'アイドマ・ホールディングスの新会社。「テレアポが繋がらない」「一斉メールがゴミ箱行き」という旧来型営業の限界を最新AIで突破。最大の特徴は実行チームが丸ごと付帯すること。御社のリソースを一切使わず商談獲得まで丸投げできます。',
+  howit:'送信先企業の公式サイト・プレスリリース・最新ニュースをAIがリサーチし、その企業固有の課題に合わせた完全カスタマイズ営業文を自動生成。メール・フォーム・SNS(DM)へ自動送付。返信率が従来の数倍〜数十倍に。',
+  strength:['1社ずつ完全カスタマイズ — テンプレ感ゼロで返信率数倍','SNS・フォームへも自動送付 — 電話に出ない相手にも届く','実行チーム付帯 — 自社リソースゼロで即日スタート','アルバイト以下のコスト — 毎月10社近くの安定アポ獲得'],
+  target_yes:['BtoBの無形商材・SaaSを扱い新規開拓が急務な企業','テレアポや一斉メールの反応率に限界を感じている営業チーム','営業担当1〜5名程度で外注検討だが固定費リスクが怖い企業','ベンチャー・スタートアップで営業部門をゼロから立ち上げたい企業'],
+  target_no:['SES・客先常駐・IT受託（業務委託NGの企業が多く効果薄）','BtoC・物販・転売','官公庁・NPO・一般社団法人・学校法人','個人事業主・フリーランス'],
+  talk:'「今、テレアポや一斉メールで新規開拓しているということですが、正直なところ反応率はどうですか？Aimsalesというサービスがあって、AIが御社の商材に合わせた営業文を1社1社カスタマイズして、SNSやフォームに自動送付してくれるんです。アルバイト1人程度のコストで実行チームまでセットで、毎月10社近くアポが取れる仕組みなんですが、詳しく聞いてみませんか？」',
+  rebuttal:[{q:'以前の営業代行で効果なかった',a:'過去は「全社同じテンプレ」が原因がほとんど。Aimsalesは1社ずつAIがリサーチして文面を変えるので反応が全く違います'},{q:'コストが気になる',a:'アルバイト1人を雇うより安いコストで実行チームと仕組みがついてきます。人件費と比較するとむしろ安全'},{q:'自社でやった方がいいのでは',a:'自社でやると採用・教育・管理コストで半年以上かかります。Aimsalesは即日スタートで本来の業務に集中できます'}],
+  chips_match:['new_client','appo_lack','telework_fail','sales_outsource','sales_resource','newbiz'],
+  chips_neg:['meishi_mgmt','legal_cost','no_legal','contract_slow','hr_flexible','hire_cost','specialist','childcare_mkt','btoc_lead'],
+  kw_match:['テレアポ','アポ','営業','新規','開拓','外注','代行','リソース','商談','メール','売上','顧客獲得'],
+  kw_neg:['名刺','契約書','法務','業務委託','子育て','育児','BtoC'],
+  industry_match:['sales_agency','consulting','it_saas','web_creative','real_estate','finance'],
+  industry_neg:['it_ses','medical','food_hospitality','public','childcare_edu'],
+  tags:['AI営業代行','完全カスタマイズ','SNS自動送付','実行チーム付帯']},
+
+  plicetech:{name:'Plice Tech',full:'株式会社 Plice Tech',tagline:'粗利が出てから払う「粗利保証型」営業支援 — リスクゼロで販路拡大',
+  about:'従来の営業代行は月額固定費・アポ単価でコストが発生し、成約しなくても費用が出る構造でした。Plice Techは「粗利保証型」モデルを採用。営業代行によって発生した粗利の中からのみ費用を支払う仕組みです。粗利が一定ラインに届かなかった場合もリスクをPlice Tech側が担保。',
+  howit:'商材の粗利率・受注単価・商談サイクルをヒアリングし粗利保証設計を確認。厳選支援会社がアポ獲得〜商談〜成約まで一気通貫サポート。成約した粗利の中から手数料を支払うため持ち出しリスクがほぼゼロ。',
+  strength:['粗利保証 — 利益が出た分だけ支払い、持ち出しリスクほぼゼロ','失敗経験ある企業こそ刺さる — 固定費払って成果ゼロの苦痛を解消','厳選支援会社 — 確実に成果を出せるプロだけ参画','新規事業・立ち上げ期に最適 — 営業マン不要で市場を試せる'],
+  target_yes:['過去に営業代行で大赤字・失敗した経験がある企業','固定費ゼロで営業外注を始めたいがCFが不安な中小企業','粗利率の高い無形商材・SaaS・コンサルを扱う企業','新規事業立ち上げ期で固定費リスクを避けたい企業'],
+  target_no:['転売・薄利多売の物販（粗利率30%未満は利益が消える）','受注まで数年単位の超大型案件','官公庁・NPO・一般社団法人'],
+  talk:'「少しお聞きしてもいいですか、これまで営業代行を使ったことはありますか？固定費だけ払って成果が出なかった経験はないですか？Plice Techは粗利が出た分からしか費用をいただかない粗利保証型の仕組みで、成果が出なければ費用はかかりません。御社の粗利率が高ければ高いほど、このモデルはぴったりはまります。詳しく聞いてみますか？」',
+  rebuttal:[{q:'本当にリスクゼロ？怪しい',a:'粗利が発生した分の中から手数料が出るので成約しなければ費用ゼロ。だからこそ確実に成果を出せる支援会社だけ厳選しています'},{q:'粗利率が低いが大丈夫か',a:'30%未満だと手数料を払うと利益が残らない可能性があります。まず粗利率を確認してからご提案します'},{q:'既に固定の営業マンがいる',a:'既存チームと並行して新規チャネルを増やす使い方が多いです。CFリスクなしに販路を広げるオプションとして考えてください'}],
+  chips_match:['past_fail','cost_fear','cash_flow','sales_outsource','newbiz','sales_resource','new_client'],
+  chips_neg:['meishi_mgmt','legal_cost','no_legal','hr_flexible','childcare_mkt','btoc_lead'],
+  kw_match:['失敗','赤字','固定費','リスク','粗利','成果報酬','キャッシュ','新規事業','外注'],
+  kw_neg:['名刺','契約書','法務','業務委託','子育て'],
+  industry_match:['sales_agency','consulting','it_saas','web_creative','real_estate','finance'],
+  industry_neg:['it_ses','medical','food_hospitality','public','childcare_edu'],
+  tags:['粗利保証','成果報酬型','リスクゼロ','無形商材向け']},
+
+  sparknow:{name:'SparkNow',full:'株式会社 SparkNow',tagline:'ICカード×QRで即交換・AIが人脈をリファラル提案するデジタル名刺',
+  about:'「紙名刺では伝えきれない情報をスマホ一つで届ける」デジタル名刺ツール。ICカードをかざすだけ（またはQR）で連絡先・事業紹介資料・PR動画・SNSアカウントを一画面で共有。AI企業情報補完・Gmail連携・チーム人脈可視化・リファラルサジェスト機能まで搭載した営業支援プラットフォームです。',
+  howit:'ICカードをかざすかQRを読み取るだけで即時情報共有。AIが相手の企業概要・ニュース・SNSを自動補足。Gmailでワンクリックお礼メール。チーム全員の人脈を可視化し、AIがリファラルサジェスト（誰を誰に紹介すべきか）を自動提案。成約率20%向上事例あり。',
+  strength:['かざすだけで即交換 — 名刺を切らす・印刷コストの問題がゼロに','AI企業情報補完 — 相手の会社をすぐ把握、商談準備が激減','チーム人脈の可視化 — 誰がどの会社と繋がっているかが組織で見える','リファラルサジェスト — 成約率20%向上の事例あり'],
+  target_yes:['名刺の印刷コスト・管理手間に悩む営業チーム・会社','展示会・交流会・BtoBイベントに頻繁に参加する企業','チームの人脈を組織全体で活用し紹介営業を強化したい企業','リファラル・紹介ベースのビジネスを加速させたい企業'],
+  target_no:['個人事業主・フリーランス（法人番号特定不可のためNG）','BtoC向け・消費者向け事業が主体の企業','名刺交換がほぼない業種（内勤のみ等）'],
+  talk:'「名刺管理って今どうされていますか？SparkNowはICカードをかざすだけで名刺交換できて、交換後すぐにAIが相手の会社情報を全部調べてくれるんです。しかもチーム全員の人脈が見えるようになるので、紹介営業の成約率が20%上がった会社もあります。展示会や交流会によく行かれますか？」',
+  rebuttal:[{q:'他の名刺アプリと何が違う',a:'他は「保存・管理」が主機能。SparkNowはAIリファラルサジェストとチーム人脈の可視化が強みです。組織の人脈資産として活かせます'},{q:'紙名刺の方が使いやすい',a:'紙名刺がなくなるわけではなく、紙名刺のスキャン・デジタル管理もできます。交換方法の追加として始めるのが多いです'},{q:'費用対効果が見えない',a:'年間印刷コストと管理工数を計算するとすぐ回収できるケースがほとんど。紹介営業で1件成約が増えれば十分元が取れます'}],
+  chips_match:['meishi_mgmt','network_use','referral','dx_push','new_client'],
+  chips_neg:['legal_cost','no_legal','contract_slow','childcare_mkt','btoc_lead'],
+  kw_match:['名刺','人脈','紹介','リファラル','展示会','イベント','交流会','チーム共有'],
+  kw_neg:['契約書','法務','業務委託','子育て','採用'],
+  industry_match:['sales_agency','consulting','it_saas','real_estate','finance','hr_recruit','manufacturing'],
+  industry_neg:['public','medical','food_hospitality'],
+  tags:['デジタル名刺','AIリファラル','人脈管理','Gmail連携']},
+
+  fukugyo:{name:'複業クラウド',full:'複業クラウド（Fクラウド）',tagline:'業務委託特化・リモート即戦力人材マッチング',
+  about:'正社員採用では時間もコストもかかるが専門スキルはすぐ必要、という企業課題を解決する業務委託特化型マッチングプラットフォーム。リモート対応可能な専門人材（マーケター・デザイナー・エンジニア・PM・コンサル等）と企業をマッチング。有料サービス（Fクラウド）の打ち合わせ前提で質の高いマッチングを実現。',
+  howit:'企業が求めるスキル・業務内容・稼働時間・報酬を登録し、条件に合う業務委託人材とマッチング。正社員採用のような長い選考プロセスなく、スピーディに即戦力を確保。リモート基本で全国から人材調達可能。',
+  strength:['業務委託特化 — 正社員採用コスト・時間ゼロで即戦力確保','リモート基本 — 全国から専門スキルを柔軟に調達','固定費ゼロ — 必要な期間だけ使えるコスト構造','多様スキル — マーケ・デザイン・PM・エンジニア・営業企画等'],
+  target_yes:['正社員採用に頼らず専門スキルをすぐ使いたい企業','リモート対応可能な業務委託人材を柔軟に使いたい企業','採用コスト・人件費を抑えたいスタートアップ・中小企業','特定スキルを短期・単発で調達したい企業'],
+  target_no:['IT業界（SES・客先常駐） — 業務委託NGとなる企業が多くマッチング困難','個人事業主・フリーランス（法人番号特定不可）','訪問営業・現場職・出社必須の職種（ドライバー・調理師・店舗スタッフ等）','資格を要する専門職（士業・医師・看護師・保育士・美容師等）','官公庁・自治体・学校法人・NPO法人・一般社団法人'],
+  talk:'「専門人材の採用ってどうされていますか？正社員だと採用コストも時間もかかりますよね。複業クラウドは業務委託でリモート対応できる即戦力の専門人材とマッチングするサービスです。必要なスキルを必要な期間だけ使えるので採用リスクゼロで動けます。今、特にどんなスキルが不足していますか？」',
+  rebuttal:[{q:'業務委託って管理が大変そう',a:'リモートでの管理ノウハウも含めてサポートします。多くの企業が最初の1人目から始めて仕組みを作っています'},{q:'うちはIT会社だから使えないか',a:'自社プロダクトを持つIT企業であればOKです。SES・客先常駐が主体の場合は難しいケースがあります'},{q:'正社員を雇った方がいいのでは',a:'正社員は長期的には有効ですが採用に3〜6ヶ月かかります。今すぐ必要なスキルを業務委託で補いながら並行するのがベストです'}],
+  chips_match:['hr_flexible','hire_cost','specialist','remote_ok','dx_push','newbiz'],
+  chips_neg:['meishi_mgmt','legal_cost','childcare_mkt','btoc_lead','telework_fail'],
+  kw_match:['業務委託','採用','人材','外部人材','リモート','専門家','内製化','スキル調達'],
+  kw_neg:['テレアポ','アポ','名刺','契約書','法務','子育て'],
+  industry_match:['it_saas','web_creative','consulting','sales_agency','manufacturing','retail_ec'],
+  industry_neg:['it_ses','medical','food_hospitality','public'],
+  tags:['業務委託特化','リモート対応','即戦力マッチ','採用コスト削減']},
+
+  probel:{name:'プロベル',full:'プロベル',tagline:'代表が直接認めた実力派のみ掲載 — 人が見える信頼ベースのBtoBマッチング',
+  about:'「どの外注先を信じればいいかわからない」「業者が多すぎてハズレを引きたくない」という業界の不透明さに課題を感じた竹村代表が立ち上げたプラットフォーム。竹村代表やプロベル側が直接認めた確かな実績を持つ企業だけが掲載。代表・担当者の「想い」まで見える化することで、リファラル（紹介）による高成約率なマッチングをデジタルで再現。',
+  howit:'厳選登録された支援会社（営業代行・SNS運用・M&Aアドバイザリー等）の中から、企業のニーズ・課題・予算に合った最適なパートナーをマッチング。代表者の顔・想い・実績が見えるプロフィールで「人で選ぶ」安心感が生まれます。',
+  strength:['厳選登録制 — ハズレを引くリスクがほぼゼロ','人の見える化 — 代表者・担当者の顔・想いまで公開','リファラル型マッチング — 信頼できる紹介をデジタルで再現','営業支援・SNS運用・M&A等の幅広い領域をカバー'],
+  target_yes:['外注先・業者選定に何度も失敗した経営者','「人を見て信頼できるパートナー」と仕事したい企業','営業支援・SNS運用・M&Aで頼れる外部パートナーが必要な企業','中小企業・オーナー経営者で「安心感」を重視する方'],
+  target_no:['同種のマッチングプラットフォーム・競合サービスへの提案は不可','大企業の調達部門・規定で業者選定する組織'],
+  talk:'「外注先や業者の選び方って、どうやって判断していますか？プロベルというサービスは、代表が直接認めた会社しか登録できない厳選制なんです。ハズレを引くリスクがほぼゼロで、しかも担当者の顔や想いまで全部見えるので安心感が全然違います。過去に外注で困ったことはありましたか？」',
+  rebuttal:[{q:'他のマッチングと何が違う',a:'多くは「登録すれば誰でも使える」ですが、プロベルは代表が直接認めた会社だけ。質の担保が根本から違います'},{q:'費用はどのくらいか',a:'詳しい条件を確認してからご案内します。導入実績と成果から見ると費用対効果は非常に高いです'},{q:'今は外注の予定がない',a:'今すぐでなくても、いざという時に頼れるパートナーを知っておくことは経営者として大事。まず見てみるだけでも価値があります'}],
+  chips_match:['vendor_distrust','vendor_fail','past_fail','network_use','referral','sales_outsource'],
+  chips_neg:['legal_cost','no_legal','childcare_mkt','btoc_lead'],
+  kw_match:['外注','業者','信頼','ハズレ','失敗','紹介','パートナー','選定','代行'],
+  kw_neg:['名刺','契約書','業務委託','子育て'],
+  industry_match:['sales_agency','consulting','it_saas','real_estate','manufacturing','finance'],
+  industry_neg:['public','medical'],
+  tags:['厳選登録制','人の見える化','リファラルマッチ','M&A']},
+
+  legalon:{name:'リーガルオン',full:'リーガルオンテクノロジーズ',tagline:'8,000社導入・AI契約書審査から電子契約・管理まで一気通貫',
+  about:'弁護士が必要だった契約書審査をAIが自動で行う法務DXサービス。導入実績8,000社、中小企業ユーザーが急増中。契約書審査・テンプレ自動作成・電子契約・契約書管理まで一気通貫でサポート。「法務担当がいない」「弁護士費用が高い」「契約締結が遅い」というBtoB企業の法務課題をAIの力で解決します。',
+  howit:'契約書をアップロードするだけでAIが自動でリスク箇所を検出・コメント付与。業種・商材に合わせたテンプレートを自動生成し、電子署名・管理まで一気通貫。毎回弁護士に頼む必要がなくなり審査コストと締結スピードを同時に改善。',
+  strength:['AI契約書審査 — アップロードするだけでリスク箇所を自動検出','テンプレ自動生成 — 業種に合わせた契約書をすぐ作れる','電子契約から一元管理まで — 契約業務を全て一プラットフォームで完結','8,000社導入実績 — 中小企業での採用急増中'],
+  target_yes:['契約書審査に時間・コストがかかり外部弁護士に依頼している企業','法務担当がおらず経営者・営業が契約書対応している中小企業','電子契約への移行・契約書一元管理を進めたい企業','締結スピードが遅くビジネス機会を逃している企業'],
+  target_no:['特定専門分野（医療・特許・国際法務等）で高度な法律判断が必要なケース（弁護士との併用推奨）'],
+  talk:'「契約書のチェックって、今どうやっていますか？毎回弁護士に頼むと費用も時間もかかりますよね。リーガルオンはAIが自動で契約書を審査してリスク箇所を教えてくれるんです。8,000社が導入していて中小企業での採用が特に増えています。今、契約書周りで困っていることはありますか？」',
+  rebuttal:[{q:'AIで本当に大丈夫？見落としが怖い',a:'AIが検出したリスク箇所に対して最終判断は人間が行います。重要案件は弁護士との併用も可能ですが、日常的な契約書の90%以上はAIでカバーできます'},{q:'すでに顧問弁護士がいる',a:'顧問弁護士の工数を削減し複雑なケースだけ相談する形にシフトできます。費用対効果が格段に上がります'},{q:'契約書の数が少ない',a:'少ない場合でも1件あたりの弁護士費用と締結時間を考えると十分元が取れます'}],
+  chips_match:['legal_cost','no_legal','contract_slow','dx_push','cost_fear'],
+  chips_neg:['meishi_mgmt','childcare_mkt','btoc_lead','hr_flexible'],
+  kw_match:['契約書','法務','弁護士','審査','電子','NDA','規約','コンプライアンス','リーガル'],
+  kw_neg:['名刺','業務委託','採用','子育て','テレアポ'],
+  industry_match:['it_saas','consulting','real_estate','manufacturing','hr_recruit','finance','sales_agency','web_creative'],
+  industry_neg:['public','food_hospitality'],
+  tags:['AI契約書審査','電子契約','8,000社実績','法務DX']},
+
+  cozre:{name:'コズレ',full:'株式会社 コズレ',tagline:'130万世帯・4世帯に1世帯登録の子育てマーケティングDB',
+  about:'妊娠・出産・育児期の4世帯に1世帯が登録する日本最大級の子育てデータプラットフォーム。130万世帯の子どもの誕生日・居住地（市区町村）を把握し、月齢×エリアで精密にアプローチ。過去のDM施策では来場率6.1%という驚異的な実績があります。',
+  howit:'コズレのデータベースを活用し、子どもの月齢・居住地・育児状況に合わせたDM・メルマガ・SNS広告等の施策を専門チームが設計・実行。ターゲット層の会員は「自分に必要な情報」として好意的に受け取るため開封率・反応率が一般的な広告と格段に高い。月500件超の回答保証プランも設計可能。',
+  strength:['130万世帯 — 4世帯に1世帯が登録する圧倒的データベース','月齢×エリアの超精密セグメント — ピンポイントなタイミングで届く','DM来場率6.1%の実績 — 「とりあえず届く」ではなく「しっかり読まれる」','月500件超の回答保証プランも設計可能'],
+  target_yes:['子育て世帯（妊娠〜育児期）をターゲットとするBtoC企業','広告費に対してリード獲得が非効率でCPAが高騰している企業','月齢・エリア別のピンポイントアプローチで反応率を上げたい企業'],
+  target_no:['BtoB主体企業（子育て世帯がペルソナでない企業）','子育て世帯以外のターゲットを持つ企業（優先度低）'],
+  talk:'「子育て世帯向けの商品やサービスを扱っていらっしゃいますか？コズレというサービスは、妊娠・育児期の4世帯に1世帯、130万世帯が登録しているデータベースを持っていて、子どもの月齢とエリアで狙い撃ちできるんです。過去にDMを送ったら来場率6.1%という実績もあります。今の広告で子育て世帯に思うように届いていますか？」',
+  rebuttal:[{q:'子育て向けの媒体は他にもある',a:'他の媒体は「子育て層全般」ですが、コズレは月齢×エリアで絞れるのが唯一の強みです。今まさに特定の商品が必要な人だけにアプローチできます'},{q:'BtoB企業だが使える？',a:'BtoBが主体の場合は難しいです。ただし社員向け福利厚生・採用広報で子育て世代にアプローチしたいケースは検討の余地があります'}],
+  chips_match:['childcare_mkt','btoc_lead'],
+  chips_neg:['meishi_mgmt','legal_cost','hr_flexible','sales_outsource','telework_fail','appo_lack'],
+  kw_match:['子育て','育児','ファミリー','ベビー','ママ','パパ','妊娠','出産','乳幼児','BtoC','集客'],
+  kw_neg:['名刺','契約書','法務','業務委託','採用','テレアポ'],
+  industry_match:['childcare_edu','retail_ec'],
+  industry_neg:['it_ses','public','medical','consulting','sales_agency'],
+  tags:['子育て特化','130万世帯DB','月齢セグメント','高開封率'],low:true}
+};
+
+const ORDER=['aimsales','plicetech','sparknow','fukugyo','probel','legalon','cozre'];
+let lastScores={};
+let currentDealId=null;
+let allDeals=[];
+
+const STATUS_LABELS={hot:'トスアップ予定',followup:'フォロー中',pending:'検討中・保留',ng:'NG・不適合',done:'完了・クローズ'};
+const STATUS_PILL={hot:'sp-hot',followup:'sp-followup',pending:'sp-pending',ng:'sp-ng',done:'sp-done'};
+const STATUS_ROW={hot:'status-hot',followup:'status-followup',pending:'status-pending',ng:'status-ng',done:'status-done'};
+
+function switchMain(tab){
+  document.getElementById('mainMtg').style.display=tab==='mtg'?'block':'none';
+  document.getElementById('mainHistory').style.display=tab==='history'?'block':'none';
+  document.querySelectorAll('.top-tab').forEach((t,i)=>t.classList.toggle('on',i===(tab==='mtg'?0:1)));
+  if(tab==='history')loadHistory();
+}
+
+function gotoStep(n){
+  for(let i=0;i<5;i++){
+    document.getElementById('pane'+i).style.display=i===n?'block':'none';
+    const s=document.getElementById('st'+i);
+    s.classList.remove('on','done');
+    if(i===n)s.classList.add('on');
+    else if(i<n)s.classList.add('done');
+  }
+  if(n===2)checkNG();
+}
+
+function getChips(){return Array.from(document.querySelectorAll('#chips1 .chip.on')).map(c=>c.dataset.k)}
+function fv(id){return(document.getElementById(id)||{}).value||''}
+
+function checkNG(){
+  const ind=fv('ind'),emp=fv('emp');
+  const ngMap={it_ses:'IT・SES・客先常駐は複業クラウドや営業代行系の一部NG対象です',medical:'医療・士業は複業クラウドNG。契約書系は対応可能です',public:'官公庁・NPO・学校法人は多くのサービスでNG対象です',food_hospitality:'飲食・接客業は現場職のため複業クラウドNG'};
+  const ngEmp={solo:'個人事業主・フリーランスは複業クラウド等でNG対象です'};
+  let warns=[];
+  if(ngMap[ind])warns.push(ngMap[ind]);
+  if(ngEmp[emp])warns.push(ngEmp[emp]);
+  document.getElementById('nga2').innerHTML=warns.map(w=>`<div class="alert alert-warn"><div class="al">注意 — NG確認</div>${w}</div>`).join('');
+}
+
+function scoreC(key,text,chips,ind,emp,biz,mar){
+  const c=DB[key];let s=0;const lc=text.toLowerCase();
+  c.kw_match.forEach(k=>{if(lc.includes(k))s+=12});
+  c.kw_neg.forEach(k=>{if(lc.includes(k))s-=15});
+  chips.forEach(ch=>{if(c.chips_match.includes(ch))s+=14});
+  chips.forEach(ch=>{if(c.chips_neg.includes(ch))s-=18});
+  if(ind&&c.industry_match.includes(ind))s+=15;
+  if(ind&&c.industry_neg.includes(ind))s-=25;
+  if((key==='aimsales'||key==='plicetech')&&['saas_tool','consulting_svc'].includes(biz))s+=12;
+  if((key==='aimsales'||key==='plicetech')&&['high','mid'].includes(mar))s+=10;
+  if((key==='aimsales'||key==='plicetech')&&mar==='low')s-=20;
+  if(key==='plicetech'){if(mar==='low')s-=30;if(chips.includes('past_fail'))s+=20;if(chips.includes('cost_fear'))s+=15}
+  if(key==='fukugyo'){if(ind==='it_ses')s-=40;if(emp==='solo')s-=40;if(['medical','food_hospitality','public'].includes(ind))s-=40}
+  if(key==='cozre'){if(c.low)s=Math.min(s,50);if(!chips.includes('childcare_mkt')&&!chips.includes('btoc_lead'))s=Math.min(s,30)}
+  if(key==='sparknow'&&emp==='solo')s-=20;
+  return Math.max(0,Math.min(100,Math.round(s)));
+}
+
+async function runAnalysis(){
+  const allText=[fv('m0'),fv('m1'),fv('m2')].join(' ');
+  const chips=getChips();
+  const ind=fv('ind'),emp=fv('emp'),biz=fv('biz'),mar=fv('mar');
+  ORDER.forEach(k=>{lastScores[k]=scoreC(k,allText,chips,ind,emp,biz,mar)});
+  document.getElementById('loader').classList.add('on');
+  document.getElementById('analyzeBtn').disabled=true;
+  let ai=null;
+  try{
+    const sp='あなたはBtoBマッチング仲介のプロです。7社：Aimsales（AIカスタマイズ営業代行）、Plice Tech（粗利保証型営業支援）、SparkNow（デジタル名刺・人脈管理）、複業クラウド（業務委託人材マッチング※SES・個人・現場職・官公庁NG）、プロベル（厳選プロBtoBマッチング）、リーガルオンテクノロジーズ（AI契約書審査・法務DX）、コズレ（子育て世帯マーケ）。JSONのみで回答。';
+    const up=`業種:${ind||'不明'} 規模:${emp||'不明'} 商材:${biz||'不明'} 粗利率:${mar||'不明'}\nキーワード:${chips.join(',')||'なし'}\nヒアリング:${allText||'なし'}\nJSON:{"summary":"2〜3文の課題分析","main_need":"主要ニーズ10字以内","alert":"NGや注意事項（なければ空文字）","situation_advice":"今回の商談でのトスアップアドバイス（2文）","scores":{"aimsales":0-100,"plicetech":0-100,"sparknow":0-100,"fukugyo":0-100,"probel":0-100,"legalon":0-100,"cozre":0-100},"top_reason":"最高スコア企業が最適な理由（1文）"}`;
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:sp+'\n\n'+up}]})});
+    const d=await res.json();
+    const raw=d.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim();
+    ai=JSON.parse(raw);
+    if(ai.scores)ORDER.forEach(k=>{if(ai.scores[k]!==undefined)lastScores[k]=Math.round(ai.scores[k])});
+  }catch(e){ai=null}
+  document.getElementById('loader').classList.remove('on');
+  document.getElementById('analyzeBtn').disabled=false;
+  renderResults(ai);
+  renderStep4(ai);
+  gotoStep(3);
+}
+
+function renderResults(ai){
+  const sorted=ORDER.map(k=>({key:k,score:lastScores[k]||0})).sort((a,b)=>b.score-a.score);
+  document.getElementById('sTop').textContent=sorted[0].score+'%';
+  document.getElementById('sCnt').textContent=sorted.filter(s=>s.score>=55).length+'社';
+  document.getElementById('sNeed').textContent=(ai&&ai.main_need)||'解析中';
+  document.getElementById('aiSum').textContent=(ai&&ai.summary)||'ヒアリング内容をもとに各社の適合度を算出しました。';
+  const alertEl=document.getElementById('mAlert');
+  alertEl.innerHTML=(ai&&ai.alert)?`<div class="alert alert-warn"><div class="al">注意事項</div>${ai.alert}</div>`:'';
+  const list=document.getElementById('cardList');list.innerHTML='';
+  sorted.forEach((item,idx)=>{
+    const c=DB[item.key];const sc=item.score;
+    const rc=idx===0&&sc>=60?'r1':idx===1&&sc>=50?'r2':idx===2&&sc>=40?'r3':'rlow';
+    const card=document.createElement('div');
+    card.className=`rcard ${rc}`;card.dataset.key=item.key;
+    const adv=(ai&&idx===0&&ai.situation_advice)?`<div class="alert alert-ok" style="margin-top:7px"><div class="al">今回の商談アドバイス</div>${ai.situation_advice}</div>`:'';
+    const topR=(ai&&idx===0&&ai.top_reason)?`<div class="alert alert-info" style="margin-top:5px"><div class="al">なぜ最適か</div>${ai.top_reason}</div>`:'';
+    card.innerHTML=`
+<div class="rcard-hdr" onclick="toggleCard('${item.key}')">
+  <div class="rbadge">${idx+1}</div>
+  <div class="rcname">${c.full}</div>
+  <div class="rcpct">${sc}%</div>
+  <div class="rchev">&#9660;</div>
+</div>
+<div class="rbar-bg"><div class="rbar-f" id="rf-${item.key}" style="width:0%"></div></div>
+<div class="rbody">
+  <div class="cbadge">${c.name}</div>
+  <div style="font-size:11px;color:var(--ts);margin-bottom:7px;line-height:1.55">${c.tagline}</div>
+  ${adv}${topR}
+  <div class="tabs">
+    <div class="tab on" onclick="swTab(this,'ab','${item.key}')">概要</div>
+    <div class="tab" onclick="swTab(this,'str','${item.key}')">強み</div>
+    <div class="tab" onclick="swTab(this,'tgt','${item.key}')">対象・NG</div>
+    <div class="tab" onclick="swTab(this,'tlk','${item.key}')">トーク</div>
+    <div class="tab" onclick="swTab(this,'reb','${item.key}')">切り返し</div>
+  </div>
+  <div id="ab-${item.key}" class="tab-pane on">
+    <div class="prop-box">${c.about}</div>
+    <div class="mlbl">仕組み・流れ</div>
+    <div style="font-size:12px;color:var(--tp);line-height:1.7">${c.howit}</div>
+    <div class="tags">${c.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+  </div>
+  <div id="str-${item.key}" class="tab-pane">
+    <ul class="check-list">${c.strength.map(s=>`<li>${s}</li>`).join('')}</ul>
+  </div>
+  <div id="tgt-${item.key}" class="tab-pane">
+    <div class="mlbl">提案すべき企業</div>
+    <ul class="check-list">${c.target_yes.map(s=>`<li>${s}</li>`).join('')}</ul>
+    <div class="mlbl">NG・向かない企業</div>
+    <ul class="x-list">${c.target_no.map(s=>`<li>${s}</li>`).join('')}</ul>
+  </div>
+  <div id="tlk-${item.key}" class="tab-pane">
+    <div class="talk-box"><div class="talk-lbl">キラーフレーズ</div><div class="talk-txt">${c.talk}</div></div>
+    <div class="row" style="margin-top:7px"><button class="btn-sm" onclick="genScript('${item.key}')">この商談向け提案書を作成 &#8599;</button></div>
+  </div>
+  <div id="reb-${item.key}" class="tab-pane">
+    <div class="q-grid">${c.rebuttal.map(r=>`<div class="q-item"><p>Q: ${r.q}</p><b>A: ${r.a}</b></div>`).join('')}</div>
+    <div class="row" style="margin-top:7px"><button class="btn-sm" onclick="genRebuttal('${item.key}')">詳細な切り返し集を作成 &#8599;</button></div>
+  </div>
+</div>`;
+    list.appendChild(card);
+    setTimeout(()=>{const bar=document.getElementById('rf-'+item.key);if(bar)bar.style.width=sc+'%'},80+idx*55);
+  });
+}
+
+function renderStep4(ai){
+  const sorted=ORDER.map(k=>({key:k,score:lastScores[k]||0})).sort((a,b)=>b.score-a.score);
+  const top=sorted[0];const c=DB[top.key];
+  document.getElementById('dealSum').textContent=`商談先: ${fv('cName')||'未入力'}${fv('pName')?' / '+fv('pName'):''}\n業種: ${fv('ind')||'未入力'} / 規模: ${fv('emp')||'未入力'}\n${(ai&&ai.summary)||''}`;
+  document.getElementById('topProp').innerHTML=`
+<div class="rcard r1" style="margin-bottom:9px"><div style="padding:11px 13px">
+  <div class="cbadge">${c.name} — 適合度 ${top.score}%</div>
+  <div style="font-size:12px;font-weight:500;color:var(--tp);margin-bottom:5px">${c.full}</div>
+  <div style="font-size:11px;color:var(--ts);margin-bottom:9px">${c.tagline}</div>
+  <div class="talk-box"><div class="talk-lbl">推奨トークスクリプト</div><div class="talk-txt">${c.talk}</div></div>
+  ${(ai&&ai.situation_advice)?`<div class="alert alert-ok" style="margin-top:7px"><div class="al">今回の商談への具体的アドバイス</div>${ai.situation_advice}</div>`:''}
+</div></div>`;
+  currentDealId=null;
+  document.getElementById('saveMsg').style.display='none';
+}
+
+async function saveDeal(){
+  const sorted=ORDER.map(k=>({key:k,score:lastScores[k]||0})).sort((a,b)=>b.score-a.score);
+  const top3=sorted.slice(0,3).filter(s=>s.score>=20);
+  const now=new Date();
+  const deal={
+    id:'deal_'+now.getTime(),
+    date:now.toISOString(),
+    companyName:fv('cName')||'未入力',
+    personName:fv('pName'),
+    industry:fv('ind'),
+    empSize:fv('emp'),
+    bizType:fv('biz'),
+    marginRate:fv('mar'),
+    chips:getChips(),
+    memo0:fv('m0'),
+    memo1:fv('m1'),
+    memo2:fv('m2'),
+    targetAppo:fv('tappo'),
+    salesNum:fv('snum'),
+    budget:fv('bgt'),
+    urgency:fv('urg'),
+    scores:JSON.parse(JSON.stringify(lastScores)),
+    topRecs:top3.map(s=>s.key),
+    topScore:sorted[0]?.score||0,
+    status:fv('dealStatus')||'hot',
+    actionNote:fv('actionNote'),
+    savedAt:now.toISOString()
+  };
+  try{
+    await window.storage.set(deal.id,JSON.stringify(deal));
+    currentDealId=deal.id;
+    document.getElementById('saveMsg').style.display='block';
+    document.getElementById('saveMsg').textContent='保存しました。「商談履歴一覧」から確認できます。';
+  }catch(e){
+    document.getElementById('saveMsg').style.display='block';
+    document.getElementById('saveMsg').textContent='保存に失敗しました。もう一度お試しください。';
+  }
+}
+
+async function loadHistory(){
+  document.getElementById('histLoading').style.display='block';
+  document.getElementById('histContent').style.display='none';
+  try{
+    const keys=await window.storage.list('deal_');
+    allDeals=[];
+    for(const key of(keys.keys||[])){
+      try{
+        const r=await window.storage.get(key);
+        if(r&&r.value)allDeals.push(JSON.parse(r.value));
+      }catch(e){}
+    }
+    allDeals.sort((a,b)=>new Date(b.savedAt)-new Date(a.savedAt));
+  }catch(e){allDeals=[]}
+  renderHistStats();
+  renderHistory();
+  document.getElementById('histLoading').style.display='none';
+  document.getElementById('histContent').style.display='block';
+}
+
+function renderHistStats(){
+  const total=allDeals.length;
+  const hot=allDeals.filter(d=>d.status==='hot').length;
+  const followup=allDeals.filter(d=>d.status==='followup').length;
+  const done=allDeals.filter(d=>d.status==='done').length;
+  document.getElementById('histStats').innerHTML=`
+<div class="hist-stat"><div class="hist-stat-n">${total}</div><div class="hist-stat-l">総商談数</div></div>
+<div class="hist-stat"><div class="hist-stat-n" style="color:var(--ac2)">${hot}</div><div class="hist-stat-l">トスアップ予定</div></div>
+<div class="hist-stat"><div class="hist-stat-n" style="color:var(--bl)">${followup}</div><div class="hist-stat-l">フォロー中</div></div>
+<div class="hist-stat"><div class="hist-stat-n" style="color:var(--ts)">${done}</div><div class="hist-stat-l">完了</div></div>`;
+}
+
+function renderHistory(){
+  const q=(document.getElementById('histSearch')?.value||'').toLowerCase();
+  const statusF=document.getElementById('histStatusFilter')?.value||'';
+  const sortF=document.getElementById('histSortFilter')?.value||'date_desc';
+  let deals=[...allDeals];
+  if(statusF)deals=deals.filter(d=>d.status===statusF);
+  if(q)deals=deals.filter(d=>(d.companyName+d.personName+d.memo0+d.memo1+d.memo2+d.chips.join(',')).toLowerCase().includes(q));
+  if(sortF==='date_asc')deals.sort((a,b)=>new Date(a.savedAt)-new Date(b.savedAt));
+  else if(sortF==='score_desc')deals.sort((a,b)=>b.topScore-a.topScore);
+  else deals.sort((a,b)=>new Date(b.savedAt)-new Date(a.savedAt));
+  const list=document.getElementById('histList');
+  if(deals.length===0){
+    list.innerHTML=`<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg></div><div style="font-size:13px">まだ商談が保存されていません</div><div style="font-size:11px;margin-top:4px">商談サポートで分析後、「履歴に保存」してください</div></div>`;
+    return;
+  }
+  list.innerHTML='';
+  deals.forEach(deal=>{
+    const topKey=deal.topRecs&&deal.topRecs[0];
+    const topC=topKey?DB[topKey]:null;
+    const initials=deal.companyName.replace('株式会社','').replace('合同会社','').trim().slice(0,2)||'--';
+    const dateStr=new Date(deal.savedAt).toLocaleDateString('ja-JP',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    const row=document.createElement('div');
+    row.className=`deal-row ${STATUS_ROW[deal.status]||''}`;
+    row.dataset.id=deal.id;
+    const recs=(deal.topRecs||[]).slice(0,3).map((k,i)=>{
+      const cls=i===0?'rc1':i===1?'rc2':'rc3';
+      return `<span class="rec-chip ${cls}">${DB[k]?.name||k} ${Math.round(deal.scores[k]||0)}%</span>`;
+    }).join('');
+    const chips_preview=(deal.chips||[]).slice(0,4).map(k=>`<span class="tag" style="font-size:10px">${k.replace(/_/g,' ')}</span>`).join('');
+    row.innerHTML=`
+<div class="deal-hdr" onclick="toggleDeal('${deal.id}')">
+  <div class="deal-avatar">${initials}</div>
+  <div class="deal-main">
+    <div class="deal-name">${deal.companyName}</div>
+    <div class="deal-sub">${deal.personName||''} ${deal.industry?'/ '+deal.industry:''}</div>
+  </div>
+  <div class="deal-meta">
+    <div class="deal-date">${dateStr}</div>
+    <div class="deal-score">${topC?topC.name+' '+Math.round(deal.topScore)+'%':''}</div>
+    <div class="status-pill ${STATUS_PILL[deal.status]||''}">${STATUS_LABELS[deal.status]||deal.status}</div>
+  </div>
+  <div class="deal-chevron">&#9660;</div>
+</div>
+<div class="deal-body" id="db-${deal.id}">
+  <div class="info-grid">
+    <div class="info-cell"><p>業種</p><b>${deal.industry||'--'}</b></div>
+    <div class="info-cell"><p>規模</p><b>${deal.empSize||'--'}</b></div>
+    <div class="info-cell"><p>商材</p><b>${deal.bizType||'--'}</b></div>
+    <div class="info-cell"><p>粗利率</p><b>${deal.marginRate||'--'}</b></div>
+  </div>
+  <div class="mlbl">推奨企業</div>
+  <div class="rec-chips">${recs}</div>
+  <div class="mlbl">課題キーワード</div>
+  <div class="tags" style="margin-bottom:8px">${chips_preview}</div>
+  ${deal.memo1?`<div class="mlbl">ヒアリング内容</div><div style="font-size:12px;color:var(--tp);line-height:1.65;background:var(--bg2);border-radius:var(--rmd);padding:8px 10px;margin-bottom:8px">${deal.memo1.slice(0,200)}${deal.memo1.length>200?'...':''}</div>`:''}
+  <div class="mlbl">アクション・メモ</div>
+  <textarea class="note-area" id="note-${deal.id}" placeholder="フォロー内容・次のアクションなど">${deal.actionNote||''}</textarea>
+  <div class="row" style="margin-top:8px">
+    <select class="status-select" id="status-${deal.id}">
+      <option value="hot" ${deal.status==='hot'?'selected':''}>トスアップ予定</option>
+      <option value="followup" ${deal.status==='followup'?'selected':''}>フォロー中</option>
+      <option value="pending" ${deal.status==='pending'?'selected':''}>検討中・保留</option>
+      <option value="ng" ${deal.status==='ng'?'selected':''}>NG・不適合</option>
+      <option value="done" ${deal.status==='done'?'selected':''}>完了・クローズ</option>
+    </select>
+    <button class="btn-sm" onclick="updateDeal('${deal.id}')">保存</button>
+    <button class="btn-sm" onclick="genFromHistory('${deal.id}')">提案書を作成 &#8599;</button>
+    <button class="btn-danger" onclick="deleteDeal('${deal.id}')">削除</button>
+  </div>
+  <div id="upd-${deal.id}" style="font-size:11px;color:var(--ac2);margin-top:5px;display:none">更新しました</div>
+</div>`;
+    list.appendChild(row);
+  });
+}
+
+function toggleDeal(id){
+  const row=document.querySelector(`.deal-row[data-id="${id}"]`);
+  if(!row)return;
+  const was=row.classList.contains('open');
+  document.querySelectorAll('.deal-row').forEach(r=>r.classList.remove('open'));
+  if(!was)row.classList.add('open');
+}
+
+async function updateDeal(id){
+  const idx=allDeals.findIndex(d=>d.id===id);
+  if(idx<0)return;
+  allDeals[idx].actionNote=document.getElementById('note-'+id)?.value||'';
+  allDeals[idx].status=document.getElementById('status-'+id)?.value||'hot';
+  allDeals[idx].updatedAt=new Date().toISOString();
+  try{
+    await window.storage.set(id,JSON.stringify(allDeals[idx]));
+    const m=document.getElementById('upd-'+id);
+    if(m){m.style.display='block';setTimeout(()=>m.style.display='none',2000)}
+    renderHistStats();
+    const row=document.querySelector(`.deal-row[data-id="${id}"]`);
+    if(row){
+      row.className=`deal-row ${STATUS_ROW[allDeals[idx].status]||''} open`;
+    }
+  }catch(e){}
+}
+
+async function deleteDeal(id){
+  if(!confirm('この商談を削除しますか？'))return;
+  try{
+    await window.storage.delete(id);
+    allDeals=allDeals.filter(d=>d.id!==id);
+    renderHistStats();
+    renderHistory();
+  }catch(e){}
+}
+
+function genFromHistory(id){
+  const deal=allDeals.find(d=>d.id===id);
+  if(!deal)return;
+  const topKey=deal.topRecs&&deal.topRecs[0];
+  const c=topKey?DB[topKey]:null;
+  if(!c)return;
+  sendPrompt(`以下の商談情報をもとに、${c.full}（${c.tagline}）の具体的な提案書・トークスクリプトを作成してください。\n\n商談先: ${deal.companyName}${deal.personName?' / '+deal.personName:''}\n業種: ${deal.industry||'不明'} / 規模: ${deal.empSize||'不明'}\nヒアリング内容:\n${[deal.memo0,deal.memo1,deal.memo2].filter(Boolean).join('\n')}\n\n課題キーワード: ${(deal.chips||[]).join(', ')}\nアクションメモ: ${deal.actionNote||'なし'}`);
+}
+
+function toggleCard(key){
+  const card=document.querySelector('.rcard[data-key="'+key+'"]');
+  if(!card)return;
+  const was=card.classList.contains('open');
+  document.querySelectorAll('.rcard').forEach(c=>c.classList.remove('open'));
+  if(!was)card.classList.add('open');
+}
+
+function swTab(el,pane,key){
+  const body=el.closest('.rbody');
+  body.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  body.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  const t=document.getElementById(pane+'-'+key);if(t)t.classList.add('on');
+}
+
+function genScript(key){
+  const c=DB[key];
+  sendPrompt(`以下の商談情報をもとに、${c.full}（${c.tagline}）の具体的な提案書・トークスクリプトを作成してください。\n\n商談先: ${fv('cName')||'未入力'}\nヒアリング内容:\n${[fv('m0'),fv('m1'),fv('m2')].filter(Boolean).join('\n')}\n\nサービスの強み:\n${c.strength.join('\n')}`);
+}
+
+function genRebuttal(key){
+  const c=DB[key];
+  sendPrompt(`${c.full}（${c.tagline}）を提案する際に想定される顧客からのよくある反論・懸念に対する切り返しトークを10パターン作成してください。\n\n既存例:\n${c.rebuttal.map(r=>`Q:${r.q} / A:${r.a}`).join('\n')}`);
+}
+
+function resetAll(){
+  ['cName','pName','m0','m1','m2','actionNote'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  ['ind','emp','biz','mar','tappo','snum','bgt','urg'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  document.querySelectorAll('.chip.on').forEach(c=>c.classList.remove('on'));
+  currentDealId=null;
+  gotoStep(0);
+}
+
+document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('on')));
+
+const KWS=['テレアポ','アポ','名刺','人脈','契約書','法務','業務委託','採用','子育て','育児','外注','失敗','リスク','固定費','粗利','リファラル','紹介','DX','新規事業','営業代行','赤字','弁護士'];
+['m0','m1','m2'].forEach((id,i)=>{
+  const ta=document.getElementById(id);
+  const kw=document.getElementById('kw'+i);
+  if(!ta||!kw)return;
+  ta.addEventListener('input',()=>{
+    const found=KWS.filter(k=>ta.value.includes(k));
+    kw.innerHTML=found.length>0?'検知: '+found.map(k=>`<span class="hw">${k}</span>`).join(' '):'';
+  });
+});
+</script>
